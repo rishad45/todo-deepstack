@@ -12,5 +12,7 @@ router.post('/update-todo', controller.updateTodo)
 
 router.get('/getFinishedTodo', controller.getFinishedTodo)
 
+router.post('/login', controller.checkLogin)
+
 module.exports = router
 

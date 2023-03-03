@@ -1,4 +1,5 @@
 const model = require('../Model/todoModel')
+const userModel = require('../Model/user')
 module.exports = {
     create: async (req, res) => {
         console.log(1)
@@ -47,6 +48,19 @@ module.exports = {
             res.status(500).send({ message: 'error' })
         })
     },
+
+    checkLogin: async(req,res) => {
+        try {
+            let result = await userModel.findOne({email : req.body.email})
+            if(result) {
+
+            }else{
+                
+            }
+        } catch (error) {
+            
+        }
+    }
 
     
 }
