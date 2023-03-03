@@ -16,7 +16,7 @@ module.exports = {
 
     getTodo: async (req, res) => {
         try {
-            const results = await model.find({finished: false})
+            const results = await model.find({ finished: false })
             res.status(200).send({ results })
         } catch (error) {
             res.status(500).send({ error })
@@ -25,7 +25,7 @@ module.exports = {
 
     getFinishedTodo: async (req, res) => {
         try {
-            const results = await model.find({finished: true})
+            const results = await model.find({ finished: true })
             res.status(200).send({ results })
         } catch (error) {
             res.status(500).send({ error })
@@ -33,7 +33,7 @@ module.exports = {
     },
 
     deleteTodo: async (req, res) => {
-        
+
         await model.deleteOne({ _id: req.body.id }).then(() => {
             res.status(200).send({ message: 'Deleted' })
         }).catch((err) => {
@@ -42,25 +42,29 @@ module.exports = {
     },
 
     updateTodo: async (req, res) => {
-        await model.updateOne({ _id: req.body.id }, {$set: {'finished' : true}}).then(() => {
+        await model.updateOne({ _id: req.body.id }, { $set: { 'finished': true } }).then(() => {
             res.status(200).send({ message: 'Deleted' })
         }).catch((err) => {
             res.status(500).send({ message: 'error' })
         })
     },
 
-    checkLogin: async(req,res) => {
+    checkLogin: async (req, res) => {
         try {
-            let result = await userModel.findOne({email : req.body.email})
-            if(result) {
-
-            }else{
-                
+            let result = await userModel.findOne({ email: req.body.email })
+            if (result) {
+                if (result.password === req.body.password) {
+                    res.status(200).send({ message: 'Login success', success: true })
+                } else {
+                    res.status(401).send({ message: 'Login unsuccess', success: false })
+                }
+            } else {
+                res.status(401).send({ message: 'No accounrt with this email', success: false })
             }
         } catch (error) {
-            
+            res.status(500).send({message: 'error', success: false})
         }
     }
 
-    
+
 }
