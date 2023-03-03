@@ -3,19 +3,48 @@ import Axios from '../API/Axios'
 const Todo = () => {
     const [todo, setTodo] = useState('')
     const [todos, setTodos] = useState([])
+    const [finshed, setFinished] = useState([])
+    const [update, setUpdate] = useState(false)
 
     const createTodo = () => {
-        Axios.post('/create-todo', todo)
+        Axios.post('/create-todo', { todo }).then((res) => {
+            setUpdate(true)
+        })
     }
-    
+
     const getTodos = () => {
-        Axios.get('/getTodos').then((result) => {
+        Axios.get('/getTodo').then((result) => {
             setTodos(result.data.results)
         })
     }
+
+    const getFinishedTodos = () => {
+        Axios.get('/getFinishedTodo').then((result) => {
+            setFinished(result.data.results)
+        })
+    }
+
+    const deleteTodo = (id) => {
+        console.log(id)
+        Axios.post('/delete-todo', { id })
+            .then((res) => {
+                setUpdate(true)
+            })
+    }
+
+    const updateTodo = (id) => {
+        console.log(id)
+        Axios.post('/update-todo', { id })
+            .then((res) => {
+                setUpdate(true)
+            })
+    }
+
     useEffect(() => {
         getTodos()
-    }, [])
+        getFinishedTodos()
+        setUpdate(false)
+    }, [update])
     return (
         <div className='todoPage'>
             <h1>Hello Rishad</h1>
@@ -26,12 +55,22 @@ const Todo = () => {
             <div className="allTodos">
                 {
                     todos.map((item) => {
+                            return <div key={item._id}>
+                                <input type="checkbox" name="" id="" onClick={() => updateTodo(item._id)} /><span>{item.todo}</span>
+                                <button onClick={() => deleteTodo(item._id)}>delete</button>
+                            </div>
+                    })
+                }
+            </div>
+
+            <div className="finished">
+                <h2>Finished Tasks</h2>
+                {
+                    finshed.map((item) => {
                         return <div>
-                            <input type="checkbox" name="" id="" /><span>{item}</span>
-                            <button>delete</button>
+                            <p>{item.todo}</p>
                         </div>
                     })
-
                 }
             </div>
         </div>
